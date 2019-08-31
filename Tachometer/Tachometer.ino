@@ -1,5 +1,11 @@
+//Define ticks for coil pulses
 volatile unsigned int ticks;
+unsigned int rpm = 0;
 const int interruptPin = 2;
+//Sets parameters
+const int timeSample = 50;
+const int timeFrame = 60000;
+const int numCyl = 4;
 
 void rev() {
   ticks++;
@@ -14,9 +20,8 @@ void loop() {
   // Number of coil ticks
   ticks = 0;
   attachInterrupt(digitalPinToInterrupt(interruptPin), rev, RISING);
-  delay(50);
+  delay(timeSample);
   detachInterrupt(digitalPinToInterrupt(interruptPin));
-  ticks = ((60000 / 50) * ticks) / 2;
   Serial.print("RPM: ");
-  Serial.println(ticks);
+  Serial.println(((timeFrame / timeSample) * ticks) / numCyl);
 }
